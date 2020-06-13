@@ -70,6 +70,24 @@ document.addEventListener('DOMContentLoaded', () => {
     //setInterval so tetromino goes down every second
 
     timerId = setInterval(moveDown, 1000)
+
+    // keycodes and events
+    //assign functions to keycodes
+    function control(e) {
+        if (e.keyCode === 37) { // keyCodes => 37 left, 39 right, 40 down, 38 up
+            moveLeft()
+        }
+        else if (e.keyCode === 38){
+            //rotate()
+        }
+        else if (e.keyCode === 39){
+            moveRight()
+        }
+        else if (e.keyCode === 40){
+            moveDown()
+        }
+    }
+    document.addEventListener('keyup', control)
     //move down function
     function moveDown() {
         undraw()
@@ -103,7 +121,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         draw()
     }
+    // same logic but for right side
+    function moveRight(){
+        undraw() // remove shape at its current location
+        const isAtRightEdge = current.some(index => (currentPosition + index) % width === (width-1))
+        if (!isAtRightEdge) currentPosition += 1
 
-    
+        if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+            currentPosition -= 1
+        }
+
+        draw()
+    }
+
 
 })
