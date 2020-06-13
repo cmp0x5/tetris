@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scoreDisplay = document.querySelector('#score') // span id = score
     const startButton = document.querySelector('#start-button') 
 
-    // Tetraminós
+    // Tetraminoes
 
     const lTetromino = [ // Draw each of the 5 tetrominoes in each of its 4 rotations using our width const
         [1, width+1, (width*2)+1, 2],
@@ -60,16 +60,50 @@ document.addEventListener('DOMContentLoaded', () => {
    }
 
    //undraw the tetromino
-   function unraw(){
+   function undraw(){
        current.forEach(index => {
            squares[currentPosition + index].classList.remove('tetromino')
        })
    }
 
-//times and intervals4533
+    //times and intervals
+    //setInterval so tetromino goes down every second
 
+    timerId = setInterval(moveDown, 1000)
+    //move down function
+    function moveDown() {
+        undraw()
+        currentPosition += width
+        draw()
+        freeze() // freeze is checked every second
+    }
+    // freeze function - if tetromino reaches bottom
 
+    function freeze(){
+        if (current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
+            current.forEach(index => squares[currentPosition + index].classList.add('taken'))
+            //start a new tetromino falling
+            random = Math.floor(Math.random() * tetrominoes.length)
+            current = tetrominoes[random][currentRotation]
+            currentPosition = 4
+            draw()
+        }
+    }
+    // modulus to define our place in the grid
+    // moving tetromino left, unless is at the edge or there is a blockage
+    function moveLeft(){
+        undraw() // remove shape at its current location
+        const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0)
+        // one of the squares divided by width leaves exactly 0 as a remainder, meaning we're at the left edge(10,20,30...)
+        if (!isAtLeftEdge) currentPosition -= 1
 
+        if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+            currentPosition += 1
+        }
 
+        draw()
+    }
+
+    
 
 })
