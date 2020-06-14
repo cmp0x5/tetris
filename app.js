@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.grid') // const grid receives the .grid values from html file
     let squares = Array.from(document.querySelectorAll('.grid div')) // Tuns divs into array with specific index number
-    const width = 10
     const scoreDisplay = document.querySelector('#score') // span id = score
     const startButton = document.querySelector('#start-button') 
+    const width = 10
+    let nextRandom = 0
 
     // Tetraminoes
 
@@ -71,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     timerId = setInterval(moveDown, 1000)
 
+
     // keycodes and events
     //assign functions to keycodes
     function control(e) {
@@ -101,12 +103,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
             current.forEach(index => squares[currentPosition + index].classList.add('taken'))
             //start a new tetromino falling
-            random = Math.floor(Math.random() * tetrominoes.length)
+            random = nextRandom
+            nextRandom = Math.floor(Math.random() * tetrominoes.length)
             current = tetrominoes[random][currentRotation]
             currentPosition = 4
             draw()
+            displayShape()
         }
     }
+
     // modulus to define our place in the grid
     // moving tetromino left, unless is at the edge or there is a blockage
     function moveLeft(){
@@ -144,7 +149,34 @@ document.addEventListener('DOMContentLoaded', () => {
         current = tetrominoes[random][currentRotation]
         draw()
     }
+    // displaying the 'next up' tetromino - see style.css and mini-grid in html
+    //show next tetromino in minigrid
+    const displaySquares = document.querySelectorAll('mini-grid div')
+    //show js how big grid is
+    const displayWidth = 4
+    let displayIndex = 0
+   
 
+    // show tetrominoes without rotation
+    const upNextTetrominoes = [
+        [1, displayWidth+1, displayWidth*2+1, 2], // lTetromino
+        [0, displayWidth, displayWidth+1, displayWidth*2+1], // zTetromino
+        [1, displayWidth, displayWidth+1, displayWidth+2], //tTetromino
+        [0, 1, displayWidth, displayWidth+1], //oTetromino
+        [1, displayWidth+1, displayWidth*2+1, displayWidth*3+1] //iTetromino
+    ]
+
+    //display the shape in the mini-grid display
+    function displayShape(){ // FIX ME - displayShape not working! error possibly in html doc <div> display
+        //remove any trace of tetromino from entire grid
+        displaySquares.forEach(square => {
+            square.classList.remove('tetromino')
+        })
+        upNextTetrominoes[nextRandom].forEach( index => {
+           displaySquares[displayIndex + index].classList.add('tetromino')
+        })
+    }
+    // add a start and pause game function
 
 
 })
