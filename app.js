@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const width = 10
     let nextRandom = 0
     let timerId
+    let score = 0
 
     // Tetraminoes
 
@@ -111,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentPosition = 4
             draw()
             displayShape()
+            addScore()
         }
     }
 
@@ -142,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     //choosing items from arrays
     //rotating the tetromino
-    function rotate(){
+    function rotate(){ // FIXME: will glitch if rotating at edge of screen
         undraw()
         currentRotation++
         if(currentRotation === current.length) { // if currentRotation gets to 4, make it go back to 0
@@ -169,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
 
     //display the shape in the mini-grid display
-    function displayShape(){ // FIX ME - displayShape not working! error possibly in html doc <div> display
+    function displayShape(){ 
         //remove any trace of tetromino from entire grid
         displaySquares.forEach(square => {
             square.classList.remove('tetromino')
@@ -191,10 +193,30 @@ document.addEventListener('DOMContentLoaded', () => {
             nextRandom = Math.floor(Math.random()*(tetrominoes.length))
             displayShape()
         }
-
     })
-    // splice()
-    
+    // .splice() Mutate the array by removing or replacing its elements with new ones
+    // only give index = only returns that one; give index, deletecount - deletes (deletecount) items at that index; can also add items
+    // splice(), concat(), appendChild()
 
+    //add score
+    function addScore(){
+        for (let i = 0; i < 199; i += width) {
+            const row = [i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9]
+
+
+            if(row.every(index => squares[index].classList.contains('taken'))) {
+                score += 10
+                scoreDisplay.innerHTML = score
+                row.forEach(index => {
+                    squares[index].classList.remove('taken')
+                    squares[index].classList.remove('tetromino')
+                })
+                const squaresRemoved = squares.splice(i, width)
+                squares = squaresRemoved.concat(squares)
+                squares.forEach(cell => grid.appendChild(cell))
+            }
+        }
+    }
+    // game over using some() and innerHTML
 
 })
