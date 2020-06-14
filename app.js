@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
             draw()
             displayShape()
             addScore()
+            gameOver()
         }
     }
 
@@ -218,5 +219,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     // game over using some() and innerHTML
-
+    // game over happens when tetrominoes breach through the upper edge of the grid
+    function gameOver(){
+        if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+            scoreDisplay.innerHTML = 'End.'
+            clearInterval(timerId)
+        }
+    }
 })
