@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const startButton = document.querySelector('#start-button') 
     const width = 10
     let nextRandom = 0
+    let timerId
 
     // Tetraminoes
 
@@ -70,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
     //times and intervals
     //setInterval so tetromino goes down every second
 
-    timerId = setInterval(moveDown, 1000)
+    //timerId = setInterval(moveDown, 1000) // this one loads on DOMContentLoaded, we want it only at the press 
+    //of the start button
 
 
     // keycodes and events
@@ -151,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // displaying the 'next up' tetromino - see style.css and mini-grid in html
     //show next tetromino in minigrid
-    const displaySquares = document.querySelectorAll('mini-grid div')
+    const displaySquares = document.querySelectorAll('.mini-grid div')
     //show js how big grid is
     const displayWidth = 4
     let displayIndex = 0
@@ -176,7 +178,23 @@ document.addEventListener('DOMContentLoaded', () => {
            displaySquares[displayIndex + index].classList.add('tetromino')
         })
     }
-    // add a start and pause game function
+    // add a start and pause game function - setInterval() & clearInterval()
+    // add functionality to the button
+    startButton.addEventListener('click', () =>  {
+        if (timerId) {
+            clearInterval(timerId)
+            timerId = null
+        }
+        else{
+            draw()
+            timerId = setInterval(moveDown, 1000)
+            nextRandom = Math.floor(Math.random()*(tetrominoes.length))
+            displayShape()
+        }
+
+    })
+    // splice()
+    
 
 
 })
